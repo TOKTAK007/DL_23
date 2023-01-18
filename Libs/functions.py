@@ -92,34 +92,45 @@ def MSE(data_y, model):
 
 # https://gist.github.com/sagarmainkar/41d135a04d7d3bc4098f0664fe20cf3c
 def  cal_cost(theta, X, y):
-    '''
-    Calculates the cost for given X and Y. The following shows and example of a single dimensional X
-    theta = Vector of thetas 
-    X     = Row of X's np.zeros((2,j))
-    y     = Actual y's np.zeros((2,1))
-    where:
-        j is the no of features
-    '''
-    m = len(y)
-    predictions = X.dot(theta)
-    cost = (1/2*m) * np.sum(np.square(predictions-y))
-    return cost
+	'''
+	Calculates the cost for given X and Y. The following shows and example of a single dimensional X
+	theta = Vector of thetas 
+	X     = Row of X's np.zeros((2,j))
+	y     = Actual y's np.zeros((2,1))
+	where:
+		j is the no of features
+	'''
+	m = len(y)
+	predictions = X.dot(theta)
+	cost = (1/2*m) * np.sum(np.square(predictions-y))
+	return cost
 
 def gradient_descent(X, y, theta, learning_rate=0.01, iterations=100):
-    '''
-    X    = Matrix of X with added bias units
-    y    = Vector of Y
-    theta=Vector of thetas np.random.randn(j,1)
-    learning_rate 
-    iterations = no of iterations
-    Returns the final theta vector and array of cost history over no of iterations
-    '''
-    m = len(y)
-    cost_history = np.zeros(iterations)
-    theta_history = np.zeros((iterations,2))
-    for it in range(iterations):
-        prediction = np.dot(X,theta)
-        theta = theta -(1/m)*learning_rate*( X.T.dot((prediction - y)))
-        theta_history[it,:] =theta.T
-        cost_history[it]  = cal_cost(theta, X, y)
-    return theta, cost_history, theta_history
+	'''
+	X    = Matrix of X with added bias units
+	y    = Vector of Y
+	theta=Vector of thetas np.random.randn(j,1)
+	learning_rate 
+	iterations = no of iterations
+	Returns the final theta vector and array of cost history over no of iterations
+	'''
+	m = len(y)
+	cost_history = np.zeros(iterations)
+	theta_history = np.zeros((iterations,2))
+	for it in range(iterations):
+		prediction = np.dot(X,theta)
+		theta = theta -(1/m)*learning_rate*( X.T.dot((prediction - y)))
+		theta_history[it,:] =theta.T
+		cost_history[it]  = cal_cost(theta, X, y)
+	return theta, cost_history, theta_history
+
+def plot_images(images):
+	n_images = len(images)
+	rows = int(np.sqrt(n_images))
+	cols = int(np.sqrt(n_images))
+	fig = plt.figure(figsize=(20, 20))
+	for i in range(rows*cols):
+		ax = fig.add_subplot(rows, cols, i+1)
+		ax.imshow(images[i].view(28, 28).cpu().numpy(), cmap='bone')
+		ax.axis('off')
+	plt.show()
