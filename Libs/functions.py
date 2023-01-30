@@ -44,6 +44,7 @@ def composite_bands(image, clip):
 	plt.figure(figsize=(20, 20))
 	plt.imshow(band_stacking, cmap='viridis', alpha=0.8)
 	plt.axis('off')
+	# plt.imsave(fname='../datasets/satellite_imagery/flood.png', arr=band_stacking, cmap='viridis', format='png')
 	plt.show()
 
 def compute_kmeans(image, number_of_classes):
@@ -123,14 +124,3 @@ def gradient_descent(X, y, theta, learning_rate=0.01, iterations=100):
 		theta_history[it,:] =theta.T
 		cost_history[it]  = cal_cost(theta, X, y)
 	return theta, cost_history, theta_history
-
-def plot_images(images):
-	n_images = len(images)
-	rows = int(np.sqrt(n_images))
-	cols = int(np.sqrt(n_images))
-	fig = plt.figure(figsize=(20, 20))
-	for i in range(rows*cols):
-		ax = fig.add_subplot(rows, cols, i+1)
-		ax.imshow(images[i].view(28, 28).cpu().numpy(), cmap='bone')
-		ax.axis('off')
-	plt.show()
