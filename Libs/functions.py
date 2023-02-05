@@ -63,7 +63,7 @@ def imshow_kmean(data, number_of_classes):
 	plt.colorbar()
 	plt.show()
 
-def draw_box(image, clip, begX, begY, widthX, hightY, save_image):
+def draw_box(image, clip, begX, begY, widthX, heightY, save_image):
 	a = normalized_data(image[:, :, 0], 0, 1)
 	b = normalized_data(image[:, :, 1], 0, 1)
 	c = normalized_data(image[:, :, 2], 0, 1)
@@ -72,12 +72,58 @@ def draw_box(image, clip, begX, begY, widthX, hightY, save_image):
 	band_stacking = exposure.rescale_intensity(band_stacking, in_range=(pLow, pHigh))  # type: ignore
 	fig, ax = plt.subplots(figsize=(20, 20))
 	ax.imshow(band_stacking, cmap='viridis', alpha=0.8)
-	rect = patches.Rectangle((begX, begY), widthX, hightY, linewidth=2, edgecolor='blue', facecolor='none')
+	rect = patches.Rectangle((begX, begY), widthX, heightY, linewidth=2, edgecolor='blue', facecolor='none')
 	ax.add_patch(rect)
 	plt.axis('off')
-	save_crop = band_stacking[begX:(begX+widthX), begY:(begY+hightY), :]
+	save_crop = band_stacking[begY:(begY+heightY), begX:(begX+widthX), :]
 	plt.imsave(fname=save_image, arr=save_crop, cmap='viridis', format='png')
 	plt.show()
+
+def count_water_pixel(arr, begX, begY, widthX, heightY):
+	box_arr = arr[begY:(begY+heightY), begX:(begX+widthX)]
+	number_of_pixel = box_arr.flatten()
+	pixel_size = box_arr.shape[0] * box_arr.shape[1]
+	threshold = pixel_size * 0.3 # permanent pixels cover more than 30%
+	# NOTE 0 is water, 1 is land
+	water_pixel = len(number_of_pixel[number_of_pixel != 1]) 
+	# print(threshold, water_pixel, pixel_size)
+	class_type = []
+	if water_pixel > int(threshold):
+		print('permanent water')
+		class_type = 'permanent water'
+	else:
+		print('land')
+		class_type = 'land'
+	return class_type
+
+def save_image_box(image, begX, begY, widthX, heightY, nonflood, clip, coordinates):
+	a = normalized_data(nonflood[:, :, 0], 0, 1)
+	b = normalized_data(nonflood[:, :, 1], 0, 1)
+	c = normalized_data(nonflood[:, :, 2], 0, 1)
+	band_stacking = np.stack((a, b, c), axis=2) # red always first
+	pLow, pHigh = np.percentile(band_stacking[~np.isnan(band_stacking)], (clip, 100-clip))
+	band_stacking = exposure.rescale_intensity(band_stacking, in_range=(pLow, pHigh))  # type: ignore
+	fig, ax = plt.subplots(figsize=(20, 20))
+	arr = image[:, :, 0]
+	# ax.imshow(arr, cmap='viridis', alpha=0.8)
+	ax.imshow(band_stacking, cmap='viridis', alpha=0.8)
+	rect = patches.Rectangle((begX, begY), widthX, heightY, linewidth=2, edgecolor='blue', facecolor='none')
+	ax.add_patch(rect)
+	plt.axis('off')
+	class_type = count_water_pixel(arr, begX, begY, widthX, heightY)
+	plt.title(class_type, fontweight='bold')
+	if class_type == 'permanent water':
+		save_image = '../datasets/sat_image_classification/permanence/' + coordinates + '.png'
+		save_crop = band_stacking[begY:(begY+heightY), begX:(begX+widthX), :]
+		plt.imsave(fname=save_image, arr=save_crop, cmap='viridis', format='png')
+		print('save png: ', save_image)
+	elif class_type == 'land':
+		save_image = '../datasets/sat_image_classification/land/' + coordinates + '.png'
+		save_crop = band_stacking[begY:(begY+heightY), begX:(begX+widthX), :]
+		plt.imsave(fname=save_image, arr=save_crop, cmap='viridis', format='png')
+		print('save png: ', save_image)
+	plt.close()
+	# plt.show()
 
 def MAE(data_y, model):
 	sum = 0.

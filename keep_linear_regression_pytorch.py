@@ -2,7 +2,7 @@
 import sys
 sys.path.append('./Libs') 
 import functions as F
-import class_functions as C
+# import class_functions as C
 #-----------------------------------------------------------------------------------------#
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,7 +30,7 @@ step 2: split data for training, validation, and testing
 '''
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, shuffle=True, random_state=42)
-# print(len(X_train), len(X_test), len(y_train), len(y_test))
+print(len(X_train), len(X_test), len(y_train), len(y_test))
 # C.plot_predictions(X_train, y_train, X_test, y_test)
 
 '''
@@ -48,34 +48,34 @@ step 4: train linear regression with optimzation.
 '''
 
 # NOTE predefined parameters
-model_0 = C.LinearRegressionModel()
-loss_fn = nn.L1Loss()
-optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.01) 
-train_loss_values = []
-test_loss_values = []
-epoch_count = []
-epochs = 1000
+# model_0 = C.LinearRegressionModel()
+# loss_fn = nn.L1Loss()
+# optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.01) 
+# train_loss_values = []
+# test_loss_values = []
+# epoch_count = []
+# epochs = 1000
 
-for epoch in range(epochs):
-	# NOTE training
-	model_0.train()
-	y_pred = model_0(X_train)
-	loss = loss_fn(y_pred, y_train)
-	optimizer.zero_grad()
-	loss.backward()
-	optimizer.step()
-	# NOTE validating
-	model_0.eval()
-	with torch.inference_mode():
-		test_pred = model_0(X_test)
-		test_loss = loss_fn(test_pred, y_test.type(torch.float))
-		# NOTE printing the results during iteration
-		if epoch % 10 == 0:
-			epoch_count.append(epoch)
-			train_loss_values.append(loss.detach().numpy())
-			test_loss_values.append(test_loss.detach().numpy())
-			print(f'Epoch: {epoch} | MAE Train Loss: {loss} | MAE Test Loss: {test_loss} ')
-# C.loss_curves(epoch_count, train_loss_values, test_loss_values)
+# for epoch in range(epochs):
+# 	# NOTE training
+# 	model_0.train()
+# 	y_pred = model_0(X_train)
+# 	loss = loss_fn(y_pred, y_train)
+# 	optimizer.zero_grad()
+# 	loss.backward()
+# 	optimizer.step()
+# 	# NOTE validating
+# 	model_0.eval()
+# 	with torch.inference_mode():
+# 		test_pred = model_0(X_test)
+# 		test_loss = loss_fn(test_pred, y_test.type(torch.float))
+# 		# NOTE printing the results during iteration
+# 		if epoch % 10 == 0:
+# 			epoch_count.append(epoch)
+# 			train_loss_values.append(loss.detach().numpy())
+# 			test_loss_values.append(test_loss.detach().numpy())
+# 			print(f'Epoch: {epoch} | MAE Train Loss: {loss} | MAE Test Loss: {test_loss} ')
+# # C.loss_curves(epoch_count, train_loss_values, test_loss_values)
 
 # NOTE find our model's learned parameters 
 # print('The model learned the following values for weights and bias: ')
