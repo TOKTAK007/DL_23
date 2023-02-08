@@ -18,6 +18,9 @@ m = 0.58 # slope
 c = 145 # intercept
 y = m*weights + c
 
+# sdfsdf
+# DEBUG_BYTECODE_SUFFIXES
+
 '''
 step 2: compute error
 '''
