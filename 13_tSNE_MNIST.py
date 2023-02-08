@@ -16,11 +16,11 @@ print('Using PyTorch version:', torch.__version__, ' Device:', device)
 #-----------------------------------------------------------------------------------------#
 
 # NOTE predifined parameters
-download_folder = '../datasets/'
+download_folder = '../larger_than_50_MB/'
 batch_size = 128 # depends on GPU memory size
 image_dim_1 = 28; image_dim_2 = 28
 output_dim = 10 # should equal to number of classes
-save_model = '../save_trained_model/LeNet.pt'
+save_model = '../larger_than_50_MB/save_trained_model/MLP.pt'
 number_of_images = 10000
 
 '''

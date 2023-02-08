@@ -18,7 +18,7 @@ print('Using PyTorch version:', torch.__version__, ' Device:', device)
 #-----------------------------------------------------------------------------------------#
 
 # NOTE predifined parameters
-download_folder = '../datasets/'
+download_folder = '../larger_than_50_MB/'
 batch_size = 128 # depends on GPU memory size
 image2plot = 25
 val_ratio = 0.8
@@ -27,7 +27,7 @@ output_dim = 10 # should equal to number of classes
 learning_rate = 0.01
 momentum = 0.5
 epochs = 10
-save_model = '../save_trained_model/VGG.pt'
+save_model = '../larger_than_50_MB/save_trained_model/VGG.pt'
 
 '''
 step 1: load CIFAR10.
