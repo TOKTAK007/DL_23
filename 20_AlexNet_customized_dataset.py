@@ -22,6 +22,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using PyTorch version:', torch.__version__, ' Device:', device)
 #-----------------------------------------------------------------------------------------#
 
+# sudo add-apt-repository ppa:opencpn/opencpn
+# sudo apt-get update
+# sudo apt-get install opencpn
+
 '''
 Step 0: Setting Up the Environment and Predefing Parameters. 
 '''
