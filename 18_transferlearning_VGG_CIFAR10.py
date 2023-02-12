@@ -186,4 +186,7 @@ for image, label, prob, correct in zip(images, labels, probs, corrects):
     if not correct:
         incorrect_examples.append((image, label, prob))
 incorrect_examples.sort(reverse = True, key=lambda x: torch.max(x[2], dim=0).values)
-U.plot_most_incorrect_CIFAR10(incorrect_examples, classes, image2plot)
+if len(incorrect_examples) >= image2plot:
+    U.plot_most_incorrect_CIFAR10(incorrect_examples, class_names, image2plot)
+else:
+    print('reduce the number of image2plot')
