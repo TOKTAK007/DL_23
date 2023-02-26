@@ -49,7 +49,8 @@ output_dim = 2 # should equal to number of classes
 learning_rate = 0.01
 momentum = 0.5
 epochs = 10
-save_model = '../larger_than_50_MB/save_trained_model/test.pt'
+model_name = 'AlexNet'
+save_model = '../larger_than_50_MB/save_trained_model/' + model_name + '.pt'
 
 '''
 step 1: Accessing and Splitting the Image Data into Training, Testing, and Validation Sets.
@@ -164,7 +165,7 @@ for epoch in range(epochs):
     print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
     print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
 # NOTE 10
-U.loss_history_plot(history_train_loss, history_valid_loss)
+U.loss_history_plot(history_train_loss, history_valid_loss, model_name)
 
 '''
 step 5: Evaluating Trained Model using Confusion Matrix.

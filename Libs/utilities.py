@@ -4,6 +4,7 @@ sys.path.append('./Libs')
 import neural_network_architectures as NNA
 #-----------------------------------------------------------------------------------------#
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as TF
@@ -13,12 +14,22 @@ from tqdm import tqdm
 from sklearn import metrics
 from sklearn import manifold
 from PIL import Image
-# from torchvision import datasets, transforms
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from collections import namedtuple
 #-----------------------------------------------------------------------------------------#
-plt.rcParams.update({'font.size': 22})
+params = {
+	'savefig.dpi': 300,  
+	'figure.dpi' : 300,
+	'axes.labelsize':11,  
+	'axes.titlesize':11,
+	'axes.titleweight': 'bold',
+	'legend.fontsize': 11,  # was 10
+	'xtick.labelsize':11,
+	'ytick.labelsize':11,
+	'font.family': 'serif',
+}
+matplotlib.rcParams.update(params)
 #-----------------------------------------------------------------------------------------#
 
 def plot_images(images):
@@ -104,6 +115,7 @@ def plot_confusion_matrix_CIFAR10(labels, pred_labels, classes):
 	cm = metrics.confusion_matrix(labels, pred_labels)
 	cm = metrics.ConfusionMatrixDisplay(cm, display_labels=classes)
 	cm.plot(values_format='d', cmap='Greens', ax=ax)
+	# plt.savefig('data_out/' + 'CM_resnet' + '.svg', format='svg', bbox_inches='tight', transparent=True, pad_inches=0)
 	plt.show()
 
 def plot_most_incorrect(incorrect, n_images):
@@ -132,7 +144,7 @@ def normalize_image(image):
 def plot_most_incorrect_CIFAR10(incorrect, classes, n_images, normalize=True):
 	rows = int(np.sqrt(n_images))
 	cols = int(np.sqrt(n_images))
-	fig = plt.figure(figsize=(25, 20))
+	fig = plt.figure()
 	for i in range(rows*cols):
 		ax = fig.add_subplot(rows, cols, i+1)
 		image, true_label, probs = incorrect[i]
@@ -145,9 +157,11 @@ def plot_most_incorrect_CIFAR10(incorrect, classes, n_images, normalize=True):
 			image = normalize_image(image)
 		ax.imshow(image.cpu().numpy())
 		ax.set_title(f'true label: {true_class} ({true_prob:.3f})\n'
-					 f'pred label: {incorrect_class} ({incorrect_prob:.3f})')
+             f'pred label: {incorrect_class} ({incorrect_prob:.3f})',
+             fontsize=6)
 		ax.axis('off')
-	fig.subplots_adjust(hspace=0.4)
+	fig.subplots_adjust(hspace=0.6)
+	# plt.savefig('data_out/' + 'incorrect_resnet' + '.svg', format='svg', bbox_inches='tight', transparent=True, pad_inches=0)
 	plt.show()
 
 def plot_CIFAR10(images, labels, classes, normalize=False):
@@ -230,17 +244,17 @@ def get_vgg_layers(config, batch_norm):
 			in_channels = c
 	return nn.Sequential(*layers)
 
-def loss_history_plot(history_train_loss, history_valid_loss):
-	plt.figure(figsize=(20, 20))
-	axis_x = np.linspace(0, len(history_train_loss), len(history_train_loss))
-	plt.plot(axis_x, history_train_loss, linestyle='solid',
-			 color='red', linewidth=5, marker='o', ms=20, label='train')
-	plt.plot(axis_x, history_valid_loss, linestyle='solid',
-			 color='blue', linewidth=5, marker='o', ms=20, label='valid')
+def loss_history_plot(history_train, history_valid, model_name):
+	axis_x = np.linspace(0, len(history_train), len(history_train))
+	plt.plot(axis_x, history_train, linestyle='solid',
+			 color='red', linewidth=1, marker='o', ms=5, label='train')
+	plt.plot(axis_x, history_valid, linestyle='solid',
+			 color='blue', linewidth=1, marker='o', ms=5, label='valid')
 	plt.xlabel('epoch')
 	plt.ylabel('loss')
 	plt.legend(['train', 'valid'])
-	plt.title('Loss', fontweight='bold')
+	plt.title(model_name + ': ' + 'Accuracy', fontweight='bold')
+	# plt.savefig('data_out/' + 'resnet' + '.svg', format='svg', bbox_inches='tight', transparent=True, pad_inches=0)
 	plt.show()
 
 def imshow_numpy_format(train_list):

@@ -12,7 +12,7 @@ import random
 import numpy as np
 import os
 import glob
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import torchvision
 #-----------------------------------------------------------------------------------------#
 from torch.utils.data import random_split
@@ -37,15 +37,15 @@ data_dir = 'LFS_folders/sat_image_classification' # where is the main folder con
 train_size = 0.7; test_size = 0.1; val_size = 0.2
 meanRGB = [0.485, 0.456, 0.406]
 stdRGB = [0.229, 0.224, 0.225]
-batch_size = 128 # depends on GPU memory size
+batch_size = 1024 # depends on GPU memory size
 image2plot = 25
 image_dim_1 = 64; image_dim_2 = 64
 output_dim = 2 # should equal to number of classes
 learning_rate = 0.01
-momentum = 0.5
-ResNet_achitecture = 'ResNet44'
+momentum = 0.1
+model_name = 'ResNet32'
 epochs = 10
-save_model = '../larger_than_50_MB/save_trained_model/' + ResNet_achitecture + '.pt'
+save_model = '../larger_than_50_MB/save_trained_model/' + model_name + '.pt'
 
 '''
 step 1: Accessing and Splitting the Image Data into Training, Testing, and Validation Sets.
@@ -89,7 +89,7 @@ step 3: Model Initialization and Parameter Selection.
 Architecture choices: ResNet32, ResNet44, ResNet56, ResNet110, ResNet1202 
 '''
 
-ResNet_config = U.ResNet_achitecture_choices(ResNet_achitecture)
+ResNet_config = U.ResNet_achitecture_choices(model_name)
 model = NNA.ResNet(ResNet_config, output_dim)
 print(model.to(device))
 summary(model, (3, image_dim_1, image_dim_2))
@@ -119,7 +119,7 @@ for epoch in range(epochs):
     print(f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
     print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
     print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
-U.loss_history_plot(history_train_loss, history_valid_loss)
+U.loss_history_plot(history_train_loss, history_valid_loss, model_name)
 
 '''
 step 5: Evaluating Trained Model using Confusion Matrix.
@@ -130,7 +130,7 @@ test_loss, test_acc = U.evaluate(model, test_iterator, criterion, device)
 print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
 images, labels, probs = U.get_predictions(model, test_iterator, device)
 pred_labels = torch.argmax(probs, 1)
-# U.plot_confusion_matrix_CIFAR10(labels, pred_labels, class_names)
+U.plot_confusion_matrix_CIFAR10(labels, pred_labels, class_names)
 
 '''
 step 6: Visualizing the Most Incorrect Predictions Based on Probabilities.
