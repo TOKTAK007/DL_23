@@ -12,7 +12,6 @@ import random
 import numpy as np
 import os
 import glob
-# import matplotlib.pyplot as plt
 import torchvision
 #-----------------------------------------------------------------------------------------#
 from torch.utils.data import random_split
@@ -33,13 +32,13 @@ torch.manual_seed(SEED)
 torch.cuda.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
 
-data_dir = 'LFS_folders/sat_image_classification' # where is the main folder containing subclasses
+data_dir = '../larger_than_50_MB/datasets' # where is the main folder containing subclasses
 train_size = 0.7; test_size = 0.1; val_size = 0.2
 meanRGB = [0.485, 0.456, 0.406]
 stdRGB = [0.229, 0.224, 0.225]
 batch_size = 1024 # depends on GPU memory size
 image2plot = 25
-image_dim_1 = 64; image_dim_2 = 64
+image_dim_1 = 32; image_dim_2 = 32
 output_dim = 2 # should equal to number of classes
 learning_rate = 0.01
 momentum = 0.1
@@ -65,7 +64,7 @@ val_list=[image_files[i] for i in val_idx.indices]
 print('number of training images: ', len(train_list),
       '\nnumber of test images: ', len(test_list),
       '\nnumber of val images: ', len(val_list))
-# U.imshow_numpy_format(train_list)
+U.imshow_numpy_format(train_list)
 
 '''
 step 2: Data Augmentation and Iterator Creation.
