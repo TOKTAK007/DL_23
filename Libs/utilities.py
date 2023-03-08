@@ -21,12 +21,12 @@ from collections import namedtuple
 params = {
 	'savefig.dpi': 300,  
 	'figure.dpi' : 300,
-	'axes.labelsize':11,  
-	'axes.titlesize':11,
+	'axes.labelsize':8,  
+	'axes.titlesize':8,
 	'axes.titleweight': 'bold',
-	'legend.fontsize': 11,  # was 10
-	'xtick.labelsize':11,
-	'ytick.labelsize':11,
+	'legend.fontsize': 8,  # was 10
+	'xtick.labelsize':8,
+	'ytick.labelsize':8,
 	'font.family': 'serif',
 }
 matplotlib.rcParams.update(params)
@@ -102,7 +102,7 @@ def get_predictions(model, iterator, device):
 	return images, labels, probs
 
 def plot_confusion_matrix(labels, pred_labels):
-	fig = plt.figure(figsize=(15, 15))
+	fig = plt.figure()
 	ax = fig.add_subplot(1, 1, 1)
 	cm = metrics.confusion_matrix(labels, pred_labels)
 	cm = metrics.ConfusionMatrixDisplay(cm, display_labels=range(10))
@@ -110,7 +110,7 @@ def plot_confusion_matrix(labels, pred_labels):
 	plt.show()
 
 def plot_confusion_matrix_CIFAR10(labels, pred_labels, classes):
-	fig = plt.figure(figsize=(15, 15))
+	fig = plt.figure()
 	ax = fig.add_subplot(1, 1, 1)
 	cm = metrics.confusion_matrix(labels, pred_labels)
 	cm = metrics.ConfusionMatrixDisplay(cm, display_labels=classes)
@@ -121,7 +121,7 @@ def plot_confusion_matrix_CIFAR10(labels, pred_labels, classes):
 def plot_most_incorrect(incorrect, n_images):
 	rows = int(np.sqrt(n_images))
 	cols = int(np.sqrt(n_images))
-	fig = plt.figure(figsize=(20, 20))
+	fig = plt.figure()
 	for i in range(rows*cols):
 		ax = fig.add_subplot(rows, cols, i+1)
 		image, true_label, probs = incorrect[i]

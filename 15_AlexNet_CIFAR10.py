@@ -26,7 +26,7 @@ image_dim_1 = 32; image_dim_2 = 32
 output_dim = 10 # should equal to number of classes
 learning_rate = 0.01
 momentum = 0.5
-epochs = 10
+epochs = 5
 save_model = '../larger_than_50_MB/save_trained_model/AlexNet.pt'
 
 '''
@@ -147,6 +147,6 @@ for image, label, prob, correct in zip(images, labels, probs, corrects):
         incorrect_examples.append((image, label, prob))
 incorrect_examples.sort(reverse = True, key=lambda x: torch.max(x[2], dim=0).values)
 if len(incorrect_examples) >= image2plot:
-    U.plot_most_incorrect_CIFAR10(incorrect_examples, class_names, image2plot)
+    U.plot_most_incorrect_CIFAR10(incorrect_examples, classes, image2plot)
 else:
     print('reduce the number of image2plot')

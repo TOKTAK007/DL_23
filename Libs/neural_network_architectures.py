@@ -1,12 +1,12 @@
 #-----------------------------------------------------------------------------------------#
 import torch
 import torch.nn.functional as TF
-import cv2
 #-----------------------------------------------------------------------------------------#
 from torch import nn
 from tqdm import tqdm
 from sklearn import metrics
 from torch.utils.data import Dataset
+from PIL import Image
 #-----------------------------------------------------------------------------------------#
 
 class LinearRegressionModel(nn.Module): 
@@ -176,8 +176,7 @@ class SatelliteDataset(Dataset):
 
 	def __getitem__(self, idx):
 		image_filepath = self.image_paths[idx]
-		image = cv2.imread(image_filepath)
-		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+		image = Image.open(image_filepath).convert('RGB')
 		label = image_filepath.split('/')[-2]
 		label = self.class_to_idx[label]
 		if self.transform is not None:
