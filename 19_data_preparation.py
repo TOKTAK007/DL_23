@@ -6,10 +6,12 @@ import os
 from PIL import Image
 #-----------------------------------------------------------------------------------------#
 
-PATH = '../larger_than_50_MB/input_data/'
-DATASETS = '../larger_than_50_MB/datasets'
-class_1 = 'land'
-class_2 = 'water'
+# PATH = '../larger_than_50_MB/input_data/'
+# DATASETS = '../larger_than_50_MB/datasets'
+PATH = '../team_datasets/Aum/input_data/'
+DATASETS = PATH + 'datasets'
+class_1 = 'rice'
+class_2 = 'non_rice'
 image_dim_1 = 32; image_dim_2 = 32
 threshold = 0.9*(image_dim_1*image_dim_2)
 
@@ -27,11 +29,14 @@ elif not os.path.exists(DATASETS):
 
 image = Image.open(PATH + 'image.png')
 image = np.array(image) # RGBA
-image = image[:, :, :3]
+# print(image.shape)
+# image = image[:, :, :3]
 label = Image.open(PATH + 'label.png')
 label = np.array(label)
 label = label[:, :, 0]
-label = np.where(label > 0, 1, 0)
+# label = np.where(label > 0, 1, 0)
+label = np.where(label == 226, 1, 0)
+# print(label.shape)
 
 # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 10))
 # ax1.imshow(image)

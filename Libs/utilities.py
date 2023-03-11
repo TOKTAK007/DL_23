@@ -21,10 +21,10 @@ from collections import namedtuple
 params = {
 	'savefig.dpi': 300,  
 	'figure.dpi' : 300,
-	'axes.labelsize':8,  
-	'axes.titlesize':8,
+	'axes.labelsize':10,  
+	'axes.titlesize':10,
 	'axes.titleweight': 'bold',
-	'legend.fontsize': 8,  # was 10
+	'legend.fontsize': 8,
 	'xtick.labelsize':8,
 	'ytick.labelsize':8,
 	'font.family': 'serif',

@@ -84,21 +84,22 @@ def view_images_from_loader(loader, num_class, class_names, mean=None, std=None)
 	plt.tight_layout()
 	plt.show()
 
-
 def means_std(train_list):
-	train_data = []
-	for img_path in train_list:
-		img = io.imread(img_path)
-		train_data.append(img)
-	train_data = np.array(train_data)
-	train_data_flat = train_data.reshape(train_data.shape[0], -1)
-	scaler = StandardScaler()
-	scaler.fit(train_data_flat)
-	mean = scaler.mean_.reshape(3, -1).mean(axis=1)
-	std = scaler.scale_.reshape(3, -1).std(axis=1)
-	print('mean: ', mean)
-	print('standard deviation: ', std)
-	return mean, std
+    train_data = []
+    for img_path in train_list:
+        img = io.imread(img_path)
+        img = img / 255.0  # limit value to be between 0 and 1
+        train_data.append(img)
+    train_data = np.array(train_data)
+    train_data = np.transpose(train_data, (0, 3, 1, 2))  # fit PyTorch format
+    train_data_flat = train_data.reshape(train_data.shape[0], -1)
+    scaler = StandardScaler()
+    scaler.fit(train_data_flat)
+    mean = scaler.mean_.reshape(3, -1).mean(axis=1)
+    std = scaler.scale_.reshape(3, -1).std(axis=1)
+    print('mean: ', mean)
+    print('standard deviation: ', std)
+    return mean, std
 
 class SatelliteDataset(Dataset):
 	def __init__(self, image_paths, class_to_idx, transform=None):

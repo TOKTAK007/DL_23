@@ -64,7 +64,7 @@ val_list=[image_files[i] for i in val_idx.indices]
 print('number of training images: ', len(train_list),
       '\nnumber of test images: ', len(test_list),
       '\nnumber of val images: ', len(val_list))
-U.imshow_numpy_format(train_list)
+# U.imshow_numpy_format(train_list)
 
 '''
 step 2: Data Augmentation and Iterator Creation.

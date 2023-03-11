@@ -38,18 +38,19 @@ torch.manual_seed(SEED)
 torch.cuda.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
 # NOTE predifined parameters
-data_dir = 'LFS_folders/sat_image_classification' # where is the main folder containing subclasses
+# data_dir = 'LFS_folders/sat_image_classification' # where is the main folder containing subclasses
+data_dir = '../team_datasets/Aum/input_data/datasets' 
 train_size = 0.7; test_size = 0.1; val_size = 0.2
 meanRGB = [0.485, 0.456, 0.406]
 stdRGB = [0.229, 0.224, 0.225]
 batch_size = 128 # depends on GPU memory size
 image2plot = 25
-image_dim_1 = 64; image_dim_2 = 64
+image_dim_1 = 32; image_dim_2 = 32
 output_dim = 2 # should equal to number of classes
 learning_rate = 0.01
 momentum = 0.5
 epochs = 10
-model_name = 'AlexNet'
+model_name = 'Aum'
 save_model = '../larger_than_50_MB/save_trained_model/' + model_name + '.pt'
 
 '''
@@ -100,14 +101,14 @@ train_iterator, valid_iterator, test_iterator = U.augmentation(meanRGB,
                                                                class_to_idx,
                                                                val_list,
                                                                test_list)
-# NOTE Batching the training data
-dataiter = iter(train_iterator)
-inputs, classes = next(dataiter)
-class_list = [class_names[x] for x in classes]
-# NOTE Making a grid from batch
-out = torchvision.utils.make_grid(inputs)
-# NOTE Quick view torch format images
-# U.quick_show_torch(out, meanRGB, stdRGB, title=class_list)
+# # NOTE Batching the training data
+# dataiter = iter(train_iterator)
+# inputs, classes = next(dataiter)
+# class_list = [class_names[x] for x in classes]
+# # NOTE Making a grid from batch
+# out = torchvision.utils.make_grid(inputs)
+# # NOTE Quick view torch format images
+# # U.quick_show_torch(out, meanRGB, stdRGB, title=class_list)
 
 '''
 step 3: Model Initialization and Parameter Selection. 
@@ -115,7 +116,7 @@ step 3: Model Initialization and Parameter Selection.
 In this step, the code creates an instance of the AlexNet_64 model, a modified version of the AlexNet model specifically adapted for image classification problems where the input images are 64x64 in size. Next, the code prints the model structure and uses the summary function to display the shape and size of each layer in the model. Finally, the optimizer is initialized using the Adam optimizer, and the loss function is specified using the Cross-Entropy Loss. Both the model and the criterion are then moved to the device specified by the device.
 '''
 
-model = NNA.AlexNet_64(output_dim)
+model = NNA.AlexNet(output_dim)
 print(model.to(device))
 summary(model, (3, image_dim_1, image_dim_2))
 optimizer = optim.Adam(model.parameters())
@@ -177,12 +178,12 @@ step 5: Evaluating Trained Model using Confusion Matrix.
 5) The confusion matrix is plotted using the U.plot_confusion_matrix_CIFAR10 function, which takes the actual labels, predicted labels, and class names as inputs. The confusion matrix is used to evaluate the model's performance by showing which classes are often confused with each other.
 '''
 
-model.load_state_dict(torch.load(save_model))
-test_loss, test_acc = U.evaluate(model, test_iterator, criterion, device)
-print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
-images, labels, probs = U.get_predictions(model, test_iterator, device)
-pred_labels = torch.argmax(probs, 1)
-U.plot_confusion_matrix_CIFAR10(labels, pred_labels, class_names)
+# model.load_state_dict(torch.load(save_model))
+# test_loss, test_acc = U.evaluate(model, test_iterator, criterion, device)
+# print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
+# images, labels, probs = U.get_predictions(model, test_iterator, device)
+# pred_labels = torch.argmax(probs, 1)
+# U.plot_confusion_matrix_CIFAR10(labels, pred_labels, class_names)
 
 '''
 step 6: Visualizing the Most Incorrect Predictions Based on Probabilities.
@@ -193,13 +194,13 @@ step 6: Visualizing the Most Incorrect Predictions Based on Probabilities.
 4) The U.plot_most_incorrect_CIFAR10 function is called to plot the most incorrect examples. This function takes the list of incorrect examples, class names, and the number of images to plot as inputs, which helps to understand the model's weaknesses and identify potential areas for improvement.
 '''
 
-corrects = torch.eq(labels, pred_labels)
-incorrect_examples = []
-for image, label, prob, correct in zip(images, labels, probs, corrects):
-    if not correct:
-        incorrect_examples.append((image, label, prob))
-incorrect_examples.sort(reverse = True, key=lambda x: torch.max(x[2], dim=0).values)
-if len(incorrect_examples) >= image2plot:
-    U.plot_most_incorrect_CIFAR10(incorrect_examples, class_names, image2plot)
-else:
-    print('reduce the number of image2plot')
+# corrects = torch.eq(labels, pred_labels)
+# incorrect_examples = []
+# for image, label, prob, correct in zip(images, labels, probs, corrects):
+#     if not correct:
+#         incorrect_examples.append((image, label, prob))
+# incorrect_examples.sort(reverse = True, key=lambda x: torch.max(x[2], dim=0).values)
+# if len(incorrect_examples) >= image2plot:
+#     U.plot_most_incorrect_CIFAR10(incorrect_examples, class_names, image2plot)
+# else:
+#     print('reduce the number of image2plot')
